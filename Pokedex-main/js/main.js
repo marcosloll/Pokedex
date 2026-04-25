@@ -11,7 +11,7 @@ let searchPokemon = 1;
 
 const fetchPokemon = async (pokemon) => {
   const APIResponse = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+    `https://pokeapi.co/api/v2/pokemon/${pokemon}`,
   );
 
   if (APIResponse.status === 200) {
@@ -30,8 +30,16 @@ const renderPokemon = async (pokemon) => {
     pokemonImage.style.display = "block";
     pokemonName.innerHTML = data.name;
     pokemonNumber.innerHTML = data.id;
-    const gif = data["sprites"]["versions"]["generation-v"]["black-white"]["animated"]["front_default"];
-    pokemonImage.src = gif ? gif : data["sprites"]["front_default"];
+    const gif =
+      data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
+        "front_default"
+      ];
+    pokemonImage.src = gif
+      ? gif
+      : `https://play.pokemonshowdown.com/sprites/ani/${data.name}.gif`;
+    pokemonImage.onerror = () => {
+      pokemonImage.src = data["sprites"]["front_default"];
+    };
     input.value = "";
     searchPokemon = data.id;
   } else {
